@@ -19,22 +19,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.0'
+
       - name: Extract ZIP
         run: |
-          unzip -o UmmAlQuraWidget.zip
-          ls -la
-          ls -la UmmAlQuraWidget/
-
-      - name: Grant execute permission to gradlew
-        run: chmod +x UmmAlQuraWidget/gradlew
+          unzip -o UmmAlQuraWidget.zip -d extracted/
+          ls -la extracted/UmmAlQuraWidget/
 
       - name: Build Debug APK
-        working-directory: UmmAlQuraWidget
-        run: ./gradlew assembleDebug --stacktrace
+        working-directory: extracted/UmmAlQuraWidget
+        run: gradle assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: UmmAlQuraWidget-APK
-          path: UmmAlQuraWidget/app/build/outputs/apk/debug/app-debug.apk
+          path: extracted/UmmAlQuraWidget/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
